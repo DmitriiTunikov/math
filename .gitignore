@@ -1,0 +1,9 @@
+
+debug/libmath.a
+*.o
+*.dll
+Makefile
+*.Debug
+*.Release
+*.user
+math.pro.user

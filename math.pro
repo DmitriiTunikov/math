@@ -9,21 +9,23 @@ QT       -= gui
 TARGET = math
 TEMPLATE = lib
 
-DEFINES += MATH_LIBRARY
+DEFINES += \
+    MATH_LIBRARY \
+    SHARED_EXPORTS
 
 SOURCES += \
-    Compact/Compact.cpp \
-    Set/Set.cpp \
-    Vector/Vector.cpp
+    Compact.cpp \
+    Set.cpp \
+    Vector.cpp
 
 HEADERS += \
-    ISolver.h \
     error.h \
     SHARED_EXPORT.h \
-    Compact/ICompact.h \
-    Set/ISet.h \
-    Vector/IVector.h \
-    Vector/Vector.h
+    ICompact.h \
+    ISet.h \
+    IVector.h \
+    Vector.h \
+    Compact.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
@@ -45,6 +47,8 @@ unix:!symbian {
 }
 
 QMAKE_CXXFLAGS += -std=gnu++0x
+
+
 
 
 

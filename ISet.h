@@ -1,8 +1,8 @@
 #ifndef ISET_H
 #define ISET_H
 
-#include "../Vector/IVector.h"
-#include "../SHARED_EXPORT.h"
+#include "IVector.h"
+#include "SHARED_EXPORT.h"
 
 class SHARED_EXPORT ISet
 {
