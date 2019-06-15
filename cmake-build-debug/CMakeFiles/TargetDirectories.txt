@@ -1,3 +1,0 @@
-D:/proga/cpp_uni/math/cmake-build-debug/CMakeFiles/math.dir
-D:/proga/cpp_uni/math/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/proga/cpp_uni/math/cmake-build-debug/CMakeFiles/rebuild_cache.dir

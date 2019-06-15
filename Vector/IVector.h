@@ -1,8 +1,9 @@
 #ifndef IVECTOR_H
 #define IVECTOR_H
 
-#include "../error.h"
-#include "../SHARED_EXPORT.h"
+#include "error.h"
+#include "SHARED_EXPORT.h"
+#include <qglobal.h>
 
 class SHARED_EXPORT IVector
 {

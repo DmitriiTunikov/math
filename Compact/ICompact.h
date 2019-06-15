@@ -2,7 +2,7 @@
 #define ICOMPACT_H
 
 #include "../Vector/IVector.h"
-#include "../SHARED_EXPORT.h"
+#include "SHARED_EXPORT.h"
 
 class SHARED_EXPORT ICompact
 {
