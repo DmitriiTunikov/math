@@ -2,12 +2,25 @@
 #include <new>          // std::nothrow
 #include <cstring>
 #include <algorithm>
-#include "Compact.h"
+#include <QString>
+#include <string.h>
 
 #include "vector.h"
 #include "ILog.h"
+#include "Compact.h"
 
 #define ABS(x) ((x) > 0 ? (x) : -(x))
+
+#define REPORT(MSG) \
+    QString qmsg("[COMPACT]:  "); \
+    qmsg += QString(MSG); \
+    qmsg += "\n\t\tFile: "; \
+    qmsg += __FILE__; \
+    qmsg += "\n\t\tLine: "; \
+    qmsg += QString::number(__LINE__); \
+    qmsg += "\n\t\tFunction: "; \
+    qmsg += __FUNCTION__; \
+    ILog::report(qmsg.toStdString().c_str())
 
 
 ICompact::IIterator::IIterator(const ICompact *const compact, int pos, const IVector *const step)
@@ -129,12 +142,17 @@ int Compact::getByIterator(ICompact::IIterator const* pIter, IVector*& pItem) co
 {
     Compact::Iterator const * pIter_c = dynamic_cast<Compact::Iterator const *> (pIter);
     if (pIter_c == NULL)
+    {
+        REPORT("Can't convert to iterator");
         return ERR_WRONG_ARG;
-
+    }
     pItem = pIter_c->m_pos->clone();
 
     if (pItem == NULL)
+    {
+        REPORT("Not enough memory");
         return ERR_MEMORY_ALLOCATION;
+    }
     return ERR_OK;
 }
 
@@ -200,11 +218,17 @@ int Compact::isContains(IVector const* const vec, bool& result) const
 int Compact::getNearestNeighbor(IVector const* vec, IVector *& nn) const
 {
     if (vec->getDim() != m_dim)
+    {
+        REPORT("Vectors dimensions mismatch");
         return ERR_DIMENSIONS_MISMATCH;
+    }
 
     nn = m_begin->clone();
     if (nn == NULL)
+    {
+        REPORT("Not enough memory");
         return ERR_MEMORY_ALLOCATION;
+    }
 
     for (unsigned int i = 0; i < m_dim; i++)
     {
@@ -232,12 +256,14 @@ int Compact::getNearestNeighbor(IVector const* vec, IVector *& nn) const
         if (p < 0)
         {
             delete nn;
+            REPORT("Result is out of range");
             return ERR_OUT_OF_RANGE;
         }
         unsigned int point_index_i = (unsigned int)(p + 0.5);
         if (m_step_counts[i] < point_index_i)
         {
             delete nn;
+            REPORT("Result is out of range");
             return ERR_OUT_OF_RANGE;
         }
 
@@ -263,13 +289,19 @@ Compact::~Compact()
 int Compact::Iterator::doStep()
 {
     if (m_index >= m_compact->m_total_point_count)
+    {
+        REPORT("Result aleady is out of range");
         return ERR_OUT_OF_RANGE;
+    }
 
     if (m_step == NULL)
     {
         m_index++;
         if (m_index >= m_compact->m_total_point_count)
+        {
+            REPORT("Result is out of range");
             return ERR_OUT_OF_RANGE;
+        }
         updateIntegerCoordsFromIndex();
     }
     else
@@ -383,8 +415,10 @@ int Compact::Iterator::setStep(IVector const* const step)
 
     m_step = step->clone();
     if (m_step == NULL)
+    {
+        REPORT("Not enough memory");
         return ERR_MEMORY_ALLOCATION;
-
+    }
     return ERR_OK;
 }
 

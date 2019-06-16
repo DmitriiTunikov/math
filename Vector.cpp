@@ -3,19 +3,37 @@
 #include <cmath>
 #include <algorithm>
 #include <new>          // std::nothrow
-//#include "Logger/Logger.h"
+#include <QString>
+#include <string.h>
 
 #include "Vector.h"
 #include "ILog.h"
+
+#define REPORT(MSG) \
+    QString qmsg("[VECTOR]:  "); \
+    qmsg += QString(MSG); \
+    qmsg += "\n\t\tFile: "; \
+    qmsg += __FILE__; \
+    qmsg += "\n\t\tLine: "; \
+    qmsg += QString::number(__LINE__); \
+    qmsg += "\n\t\tFunction: "; \
+    qmsg += __FUNCTION__; \
+    ILog::report(qmsg.toStdString().c_str())
 
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 
 #define TO_CONST_VECTOR(name) \
     const Vector* name##_v = dynamic_cast<const Vector *> (name); \
     if (name##_v == NULL) \
+    {\
+        REPORT("Can't cast argument to vector"); \
         return ERR_WRONG_ARG; \
+    } \
     if (name##_v->m_size != m_size) \
-        return ERR_DIMENSIONS_MISMATCH;
+    { \
+        REPORT("Dimension mismatch"); \
+        return ERR_DIMENSIONS_MISMATCH; \
+    }
 
 #define TO_CONST_VECTOR_ERROR_AS_NULL(name) \
     const Vector* name##_v = dynamic_cast<const Vector *> (name); \
@@ -215,6 +233,7 @@ int Vector::norm(NormType type, double& res) const
         res = std::pow(res, 1.0 / m_size);
         break;
     default:
+        REPORT("Undefined norm as argument");
         return ERR_NORM_NOT_DEFINED;
         break;
     }
@@ -224,7 +243,10 @@ int Vector::norm(NormType type, double& res) const
 int Vector::setCoord(unsigned int index, double elem)
 {
     if (index >= m_size)
+    {
+        REPORT("Vector index is out of range");
         return ERR_OUT_OF_RANGE;
+    }
     m_vals[index] = elem;
     return ERR_OK;
 }
@@ -232,7 +254,10 @@ int Vector::setCoord(unsigned int index, double elem)
 int Vector::getCoord(unsigned int index, double & elem) const
 {
     if (index >= m_size)
+    {
+        REPORT("Vector index is out of range");
         return ERR_OUT_OF_RANGE;
+    }
     elem = m_vals[index];
     return ERR_OK;
 }
@@ -240,7 +265,10 @@ int Vector::getCoord(unsigned int index, double & elem) const
 int Vector::setAllCoords(unsigned int dim, double* coords)
 {
     if (dim != m_size)
+    {
+        REPORT("Vectors dimensions mismatch");
         return ERR_DIMENSIONS_MISMATCH;
+    }
     m_size = dim;
     std::memcpy(m_vals, coords, sizeof(double) * dim);
 
