@@ -23,7 +23,8 @@ HEADERS += \
     Compact/ICompact.h \
     Set/ISet.h \
     Vector/IVector.h \
-    Vector/Vector.h
+    Vector/Vector.h \
+    Set/Set.h
 
 symbian {
     MMP_RULES += EXPORTUNFROZEN
@@ -45,6 +46,7 @@ unix:!symbian {
 }
 
 QMAKE_CXXFLAGS += -std=gnu++0x
+
 
 
 
