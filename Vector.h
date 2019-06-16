@@ -6,7 +6,10 @@
 class SHARED_EXPORT Vector : IVector
 {
 public:
-    int getId() const;
+    int getId() const
+    {
+        return INTERFACE_0;
+    }
 
     /*factories*/
     static IVector* createVector(unsigned int size, double const* vals);
@@ -16,13 +19,11 @@ public:
     int subtract(IVector const* const right);
     int multiplyByScalar(double scalar);
     int dotProduct(IVector const* const right, double& res) const;
-    int crossProduct(IVector const* const right);
 
     /*static operations*/
     static IVector* add(IVector const* const left, IVector const* const right);
     static IVector* subtract(IVector const* const left, IVector const* const right);
     static IVector* multiplyByScalar(IVector const* const left, double scalar);
-    //static IVector* crossProduct(IVector const* const left, IVector const* const right);
 
     /*comparators*/
     int gt(IVector const* const right, NormType type, bool& result) const;

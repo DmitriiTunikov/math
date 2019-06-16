@@ -25,7 +25,6 @@ Vector::Vector(unsigned int size, double *vals) :
 {
 }
 
-
 IVector* Vector::createVector(unsigned int size, double const* vals)
 {
     if (size == 0 or vals == NULL)
@@ -38,11 +37,6 @@ IVector* Vector::createVector(unsigned int size, double const* vals)
     if (res == NULL)
         delete [] vals_copy;
     return res;
-}
-
-int Vector::getId() const
-{
-    return DIMENSION_INTERFACE_IMPL;
 }
 
 int Vector::add(IVector const* const right)

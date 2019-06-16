@@ -11,7 +11,6 @@
 
 ISet::IIterator::IIterator(ISet const* const set, int pos)
 {
-
 }
 
 Set::Set(Vector const ** data, unsigned int size) :
@@ -129,11 +128,11 @@ int Set::Iterator::next(){
     return ErrorEnum::ERR_OK;
 }
 
-Set::IIterator* Set::end(){
+ISet::IIterator* Set::end(){
     return new Iterator(this, m_size - 1);
 }
 
-Set::IIterator* Set::begin(){
+ISet::IIterator* Set::begin(){
     return new Iterator(this, 0);
 }
 

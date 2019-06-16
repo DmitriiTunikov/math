@@ -6,7 +6,10 @@
 class SHARED_EXPORT Set : ISet
 {
 public:
-     int getId() const;
+     int getId() const
+     {
+         return INTERFACE_0;
+     }
 
     /*factories*/
     static ISet* createSet(unsigned int R_dim);
