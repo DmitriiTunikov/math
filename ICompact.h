@@ -69,13 +69,21 @@ public:
     }
 
     virtual int isContains(IVector const* const vec, bool& result) const = 0;
-    virtual int isSubSet(ICompact const* const other) const = 0;
+    virtual int isSubSet(ICompact const* const other) const
+    {
+        qt_assert("NOT IMPLEMENTED", __FILE__, __LINE__);
+        return ERR_NOT_IMPLEMENTED;
+    }
     virtual int isSimplyConn(bool& result) const
     {
         result = true;
         return ERR_OK;
     }
-    virtual int isIntersects(ICompact const* const other, bool& result) const = 0;
+    virtual int isIntersects(ICompact const* const other, bool& result) const
+    {
+        qt_assert("NOT IMPLEMENTED", __FILE__, __LINE__);
+        return ERR_NOT_IMPLEMENTED;
+    }
     virtual int getNearestNeighbor(IVector const* vec, IVector *& nn) const = 0;
 
     virtual ICompact* clone() const = 0;
