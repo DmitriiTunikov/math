@@ -25,7 +25,8 @@ HEADERS += \
     ISet.h \
     IVector.h \
     Vector.h \
-    Compact.h
+    Compact.h \
+    Set.h
 
 
 symbian {
