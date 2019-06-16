@@ -17,18 +17,17 @@ SOURCES += \
     Compact.cpp \
     Set.cpp \
     Vector.cpp \
-    Logger.cpp
 
 HEADERS += \
     error.h \
     SHARED_EXPORT.h \
     ICompact.h \
     ISet.h \
+    ILog.h \
     IVector.h \
     Vector.h \
     Compact.h \
     Set.h \
-    Logger.h
 
 
 symbian {
@@ -49,5 +48,7 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+LIBS += "$$PWD/ILog.dll"
 
 QMAKE_CXXFLAGS += -std=gnu++0x

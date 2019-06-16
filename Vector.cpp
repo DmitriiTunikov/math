@@ -6,6 +6,7 @@
 //#include "Logger/Logger.h"
 
 #include "Vector.h"
+#include "ILog.h"
 
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 

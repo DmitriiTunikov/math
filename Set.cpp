@@ -1,13 +1,9 @@
-//
-// Created by dimat on 15.06.2019.
-//
-
 #include "Set.h"
 #include "error.h"
 #include <stdio.h>
 #include <new>          // std::nothrow
 
-//#include "Logger/Logger.h"
+#include "ILog.h"
 
 ISet::IIterator::IIterator(ISet const* const set, int pos)
 {
@@ -36,7 +32,7 @@ int Set::put(IVector const* const item){
 
 int Set::get(unsigned int index, IVector*& pItem) const{
     if (index < 0 || index > m_size - 1){
-        //Logger::print(QString("error while getting set item by index - wrong index"));
+        ILog::report("error while getting set item by index - wrong index");
         return ErrorEnum::ERR_OUT_OF_RANGE;
     }
     pItem = m_data[index]->clone();

@@ -3,9 +3,12 @@
 #include <cstring>
 #include <algorithm>
 #include "Compact.h"
+
 #include "vector.h"
+#include "ILog.h"
 
 #define ABS(x) ((x) > 0 ? (x) : -(x))
+
 
 ICompact::IIterator::IIterator(const ICompact *const compact, int pos, const IVector *const step)
 {
