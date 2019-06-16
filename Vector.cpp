@@ -228,7 +228,7 @@ int Vector::setCoord(unsigned int index, double elem)
     return ERR_OK;
 }
 
-int Vector::getCoord(unsigned int index, double & elem)
+int Vector::getCoord(unsigned int index, double & elem) const
 {
     if (index >= m_size)
         return ERR_OUT_OF_RANGE;
