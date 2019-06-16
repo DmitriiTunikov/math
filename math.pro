@@ -16,7 +16,8 @@ DEFINES += \
 SOURCES += \
     Compact.cpp \
     Set.cpp \
-    Vector.cpp
+    Vector.cpp \
+    Logger.cpp
 
 HEADERS += \
     error.h \
@@ -26,7 +27,8 @@ HEADERS += \
     IVector.h \
     Vector.h \
     Compact.h \
-    Set.h
+    Set.h \
+    Logger.h
 
 
 symbian {
