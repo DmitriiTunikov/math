@@ -34,8 +34,8 @@ public:
         Iterator() = delete;
         Iterator(const Iterator& other) = delete;
         void operator=(const Iterator& other) = delete;
-        unsigned int m_curIdx;
-        unsigned int m_setSize;
+        unsigned int m_idx;
+        Set* m_set;
     };
 
     IIterator* end();
@@ -47,11 +47,14 @@ public:
     /*dtor*/
     ~Set();
 private:
-    Set(Vector const ** data, unsigned int size);
+    Vector* myCreateVector(unsigned int size, double const* vals);
+    int copyAndDeleteData();
+    void cleanMemory(IVector const ** data, unsigned int size);
+    Set(IVector const ** data);
     // DATA
-    Vector const ** m_data;
-    unsigned int m_size;
+    IVector const ** m_data;
     unsigned int m_curIdx;
+    unsigned int m_dim;
 };
 
 #endif // SET_H
