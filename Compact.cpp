@@ -1,4 +1,5 @@
 #include "Compact.h"
+#include "ILog.h"
 
 ICompact::IIterator::IIterator(const ICompact *const compact, int pos, const IVector *const step)
 {

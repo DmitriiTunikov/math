@@ -1,7 +1,6 @@
 
 debug/libmath.a
 *.o
-*.dll
 Makefile
 *.Debug
 *.Release

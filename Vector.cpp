@@ -5,6 +5,7 @@
 #include <new>          // std::nothrow
 
 #include "Vector.h"
+#include "ILog.h"
 
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 
