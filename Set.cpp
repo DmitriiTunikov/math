@@ -11,16 +11,16 @@ ISet::IIterator::IIterator(ISet const* const set, int pos)
 {
 }
 
-Vector* Set::myCreateVector(unsigned int size, double const* vals){
+IVector* Set::myCreateVector(unsigned int size, double const* vals){
     return Vector::createVector(size, vals);
 }
 
-Set::Set(IVector const ** data, unsigned int dim) :
+Set::Set(IVector ** data, unsigned int dim) :
     m_data(data), m_curIdx(0), m_dim(dim)
 {
 }
 
-int Set::copyAndDeleteData(IVector const ** dst, IVector const ** src, unsigned int size)
+int Set::copyAndDeleteData(IVector ** dst, IVector ** src, unsigned int size)
 {
     if (src == NULL || dst == NULL || size < 0)
     {
@@ -41,24 +41,24 @@ int Set::copyAndDeleteData(IVector const ** dst, IVector const ** src, unsigned 
         dst[i] = myCreateVector(m_dim, tmpDouble.data());
         memcpy(dst[i], src[i], m_dim);
     }
-    cleanMemory(src, size);
+    cleanMemory(const_cast<IVector**>(src), size);
     return ERR_OK;
 }
 
-void Set::cleanMemory(IVector const ** data, unsigned int size)
+void Set::cleanMemory(IVector ** data, unsigned int size)
 {
     for (size_t i = 0; i < size; i++)
         delete data[i];
     delete[] data;
 }
 
-int Set::put(IVector const* const item){
+int Set::put(IVector const * const item){
     if (item == NULL){
         ILog::report("error while put item to set - item == NULL");
         return ERR_WRONG_ARG;
     }
 
-    IVector const ** tmpData = new (std::nothrow) Vector*[m_curIdx];
+    IVector ** tmpData = new (std::nothrow) IVector *[m_curIdx];
     if (tmpData == NULL)
     {
         ILog::report("can't allocate memory");
@@ -71,7 +71,7 @@ int Set::put(IVector const* const item){
         return ec;
     }
 
-    m_data = new (std::nothrow) Vector*[m_curIdx + 1];
+    m_data = new (std::nothrow) IVector*[m_curIdx + 1];
     if (m_data == NULL)
     {
         cleanMemory(tmpData, m_curIdx);
@@ -109,7 +109,7 @@ int Set::get(unsigned int index, IVector*& pItem) const{
 
 int Set::remove(unsigned int index)
 {
-    IVector const ** tmpData = new (std::nothrow) Vector*[m_curIdx];
+    IVector ** tmpData = new (std::nothrow) IVector*[m_curIdx];
     if (tmpData == NULL)
     {
         ILog::report("can't allocate memory");
@@ -122,7 +122,7 @@ int Set::remove(unsigned int index)
         return ec;
     }
 
-    m_data = new (std::nothrow) Vector*[m_curIdx - 1];
+    m_data = new (std::nothrow) IVector*[m_curIdx - 1];
     if (m_data == NULL)
     {
         cleanMemory(tmpData, m_curIdx);
@@ -146,7 +146,7 @@ int Set::remove(unsigned int index)
     return ERR_OK;
 }
 
-int Set::contains(IVector const* const pItem, bool & rc) const{
+int Set::contains(IVector const * const pItem, bool & rc) const{
     if (pItem == NULL){
         ILog::report("error while contains set method - wrong item");
         return ERR_WRONG_ARG;
@@ -193,9 +193,8 @@ int Set::deleteIterator(IIterator * pIter){
     return ERR_OK;
 }
 
-Set::Iterator::Iterator(ISet const* const set, int pos) : IIterator(set, pos){
+Set::Iterator::Iterator(Set const* const set, int pos) : IIterator(set, pos), m_set(set){
     m_idx = pos;
-    m_set = set;
 }
 
 int Set::getByIterator(const IIterator *pIter, IVector *&pItem) const{
@@ -206,7 +205,7 @@ int Set::getByIterator(const IIterator *pIter, IVector *&pItem) const{
     if (it == NULL)
         return ERR_WRONG_ARG;
 
-    pItem = m_data[it->m_curIdx]->clone();
+    pItem = m_data[it->m_idx]->clone();
     return ERR_OK;
 }
 
@@ -214,7 +213,7 @@ int Set::Iterator::next(){
     if (isEnd())
         return ERR_OUT_OF_RANGE;
 
-    ++m_curIdx;
+    ++m_idx;
     return ERR_OK;
 }
 

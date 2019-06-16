@@ -29,13 +29,13 @@ public:
         int prev();
         bool isEnd() const;
         bool isBegin() const;
-        Iterator(ISet const* const set, int pos);
+        Iterator(Set const* const set, int pos);
     private:
         Iterator() = delete;
         Iterator(const Iterator& other) = delete;
         void operator=(const Iterator& other) = delete;
         unsigned int m_idx;
-        Set* m_set;
+        Set const * const m_set;
     };
 
     IIterator* end();
@@ -47,12 +47,12 @@ public:
     /*dtor*/
     ~Set();
 private:
-    Vector* myCreateVector(unsigned int size, double const* vals);
-    int copyAndDeleteData();
-    void cleanMemory(IVector const ** data, unsigned int size);
-    Set(IVector const ** data);
+    IVector* myCreateVector(unsigned int size, double const* vals);
+    int copyAndDeleteData(IVector ** dst, IVector ** src, unsigned int size);
+    void cleanMemory(IVector ** data, unsigned int size);
+    Set(IVector ** data, unsigned int dim);
     // DATA
-    IVector const ** m_data;
+    IVector ** m_data;
     unsigned int m_curIdx;
     unsigned int m_dim;
 };
