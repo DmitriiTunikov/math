@@ -6,23 +6,23 @@
 class SHARED_EXPORT Vector : IVector
 {
 public:
-    int getId() const = 0;
+    int getId() const;
 
     /*factories*/
     static IVector* createVector(unsigned int size, double const* vals);
 
     /*operations*/
-    int add(IVector const* const right) = 0;
-    int subtract(IVector const* const right) = 0;
-    int multiplyByScalar(double scalar) = 0;
-    int dotProduct(IVector const* const right, double& res) const = 0;
+    int add(IVector const* const right);
+    int subtract(IVector const* const right);
+    int multiplyByScalar(double scalar);
+    int dotProduct(IVector const* const right, double& res) const;
     int crossProduct(IVector const* const right);
 
     /*static operations*/
     static IVector* add(IVector const* const left, IVector const* const right);
     static IVector* subtract(IVector const* const left, IVector const* const right);
     static IVector* multiplyByScalar(IVector const* const left, double scalar);
-    static IVector* crossProduct(IVector const* const left, IVector const* const right);
+    //static IVector* crossProduct(IVector const* const left, IVector const* const right);
 
     /*comparators*/
     int gt(IVector const* const right, NormType type, bool& result) const;
@@ -39,11 +39,11 @@ public:
     IVector* clone() const;
 
 private:
-    Vector(unsigned int size, double const* vals);
+    Vector(unsigned int size, double* vals);
 
     // Data
     unsigned int _size;
-    double const* _vals;
+    double*  _vals;
 };
 
 #endif // VECTOR_H

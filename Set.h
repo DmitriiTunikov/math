@@ -1,7 +1,7 @@
 #ifndef SET_H
 #define SET_H
 #include "ISet.h"
-#include "Vector/Vector.h"
+#include "Vector.h"
 
 class SHARED_EXPORT Set : ISet
 {
@@ -29,8 +29,8 @@ public:
         Iterator(ISet const* const set, int pos);
     private:
         Iterator() = delete;
-        IIterator(const IIterator& other) = delete;
-        void operator=(const IIterator& other) = delete;
+        Iterator(const Iterator& other) = delete;
+        void operator=(const Iterator& other) = delete;
         unsigned int m_curIdx;
         unsigned int m_setSize;
     };
@@ -44,6 +44,8 @@ public:
     /*dtor*/
     ~Set();
 private:
+    Set(Vector const ** data, unsigned int size);
+    // DATA
     Vector const ** m_data;
     unsigned int m_size;
     unsigned int m_curIdx;

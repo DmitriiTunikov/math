@@ -49,28 +49,3 @@ unix:!symbian {
 }
 
 QMAKE_CXXFLAGS += -std=gnu++0x
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 6d03572a00a25095139ef3587b87d369a4fc57b8
