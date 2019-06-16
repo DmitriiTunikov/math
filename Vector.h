@@ -43,8 +43,8 @@ private:
     Vector(unsigned int size, double* vals);
 
     // Data
-    unsigned int _size;
-    double*  _vals;
+    unsigned int m_size;
+    double*  m_vals;
 };
 
 #endif // VECTOR_H

@@ -12,7 +12,7 @@
     const Vector* name##_v = dynamic_cast<const Vector *> (name); \
     if (name##_v == NULL) \
         return ERR_WRONG_ARG; \
-    if (name##_v->_size != _size) \
+    if (name##_v->m_size != m_size) \
         return ERR_DIMENSIONS_MISMATCH;
 
 #define TO_CONST_VECTOR_ERROR_AS_NULL(name) \
@@ -21,7 +21,7 @@
         return NULL;
 
 Vector::Vector(unsigned int size, double *vals) :
-    _size(size), _vals(vals)
+    m_size(size), m_vals(vals)
 {
 }
 
@@ -42,8 +42,8 @@ IVector* Vector::createVector(unsigned int size, double const* vals)
 int Vector::add(IVector const* const right)
 {
     TO_CONST_VECTOR(right)
-    for (unsigned i = 0; i < _size; i++)
-        _vals[i] += right_v->_vals[i];
+    for (unsigned i = 0; i < m_size; i++)
+        m_vals[i] += right_v->m_vals[i];
 
     return ERR_OK;
 }
@@ -51,16 +51,16 @@ int Vector::add(IVector const* const right)
 int Vector::subtract(IVector const* const right)
 {
    TO_CONST_VECTOR(right)
-   for (unsigned i = 0; i < _size; i++)
-       _vals[i] -= right_v->_vals[i];
+   for (unsigned i = 0; i < m_size; i++)
+       m_vals[i] -= right_v->m_vals[i];
 
    return ERR_OK;
 }
 
 int Vector::multiplyByScalar(double scalar)
 {
-    for (unsigned i = 0; i < _size; i++)
-        _vals[i] *= scalar;
+    for (unsigned i = 0; i < m_size; i++)
+        m_vals[i] *= scalar;
 
     return ERR_OK;
 }
@@ -70,8 +70,8 @@ int Vector::dotProduct(IVector const* const right, double& res) const
     TO_CONST_VECTOR(right)
 
     res = 0;
-    for (unsigned i = 0; i < _size; i++)
-        res += _vals[i] + right_v->_vals[i];
+    for (unsigned i = 0; i < m_size; i++)
+        res += m_vals[i] + right_v->m_vals[i];
 
     return ERR_OK;
 }
@@ -185,7 +185,7 @@ int Vector::eq(IVector const* const right, NormType type, bool& result, double p
 
 unsigned int Vector::getDim() const
 {
-    return _size;
+    return m_size;
 }
 
 int Vector::norm(NormType type, double& res) const
@@ -195,22 +195,22 @@ int Vector::norm(NormType type, double& res) const
     switch (type)
     {
     case NORM_1:
-        for (unsigned i = 0; i < _size; i++)
-            res += _vals[i] * _vals[i];
+        for (unsigned i = 0; i < m_size; i++)
+            res += m_vals[i] * m_vals[i];
         res = std::sqrt(res);
         break;
     case NORM_2:
-        for (unsigned i = 0; i < _size; i++)
-            res += abs(_vals[i]);
+        for (unsigned i = 0; i < m_size; i++)
+            res += abs(m_vals[i]);
         break;
     case NORM_INF:
-        for (unsigned i = 0; i < _size; i++)
-            res = std::max(res, ABS(_vals[i]));
+        for (unsigned i = 0; i < m_size; i++)
+            res = std::max(res, ABS(m_vals[i]));
         break;
     case DIMENSION_NORM:
-        for (unsigned i = 0; i < _size; i++)
-            res += std::pow(ABS(_vals[i]), _size);
-        res = std::pow(res, 1.0 / _size);
+        for (unsigned i = 0; i < m_size; i++)
+            res += std::pow(ABS(m_vals[i]), m_size);
+        res = std::pow(res, 1.0 / m_size);
         break;
     default:
         return ERR_NORM_NOT_DEFINED;
@@ -221,39 +221,39 @@ int Vector::norm(NormType type, double& res) const
 
 int Vector::setCoord(unsigned int index, double elem)
 {
-    if (index >= _size)
+    if (index >= m_size)
         return ERR_OUT_OF_RANGE;
-    _vals[index] = elem;
+    m_vals[index] = elem;
     return ERR_OK;
 }
 
 int Vector::getCoord(unsigned int index, double & elem)
 {
-    if (index >= _size)
+    if (index >= m_size)
         return ERR_OUT_OF_RANGE;
-    elem = _vals[index];
+    elem = m_vals[index];
     return ERR_OK;
 }
 
 int Vector::setAllCoords(unsigned int dim, double* coords)
 {
-    if (dim != _size)
+    if (dim != m_size)
         return ERR_DIMENSIONS_MISMATCH;
-    _size = dim;
-    std::memcpy(_vals, coords, sizeof(double) * dim);
+    m_size = dim;
+    std::memcpy(m_vals, coords, sizeof(double) * dim);
 
     return ERR_OK;
 }
 
 int Vector::getCoordsPtr(unsigned int & dim, double const*& elem) const
 {
-    dim = _size;
-    elem = _vals;
+    dim = m_size;
+    elem = m_vals;
 
     return ERR_OK;
 }
 
 IVector* Vector::clone() const
 {
-    return Vector::createVector(_size, _vals);
+    return Vector::createVector(m_size, m_vals);
 }
