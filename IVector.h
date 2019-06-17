@@ -63,10 +63,10 @@ public:
     virtual IVector* clone() const = 0;
 
     /*dtor*/
-    virtual ~IVector() = default;
+    virtual ~IVector(){}
 
 protected:
-    IVector() = default;
+    IVector(){}
 
 private:
     /*non default copyable*/

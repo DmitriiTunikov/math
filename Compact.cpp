@@ -138,7 +138,7 @@ ICompact* Compact::createCompact(IVector const* const begin, IVector const* cons
 
 int Compact::deleteIterator(ICompact::IIterator * pIter)
 {
-    delete pIter;
+    delete reinterpret_cast<Iterator *>(pIter);
     return ERR_OK;
 }
 

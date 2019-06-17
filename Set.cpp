@@ -182,7 +182,7 @@ int Set::clear(){
 }
 
 int Set::deleteIterator(IIterator * pIter){
-    delete pIter;
+    delete reinterpret_cast<Iterator *>(pIter);
     return ERR_OK;
 }
 

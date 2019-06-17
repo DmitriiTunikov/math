@@ -89,7 +89,7 @@ public:
     virtual ICompact* clone() const = 0;
 
     /*dtor*/
-    virtual ~ICompact() = default;
+    virtual ~ICompact(){}
 
     class IIterator
     {
@@ -105,7 +105,7 @@ public:
         IIterator(ICompact const* const compact, int pos, IVector const* const step);
 
         /*dtor*/
-        virtual ~IIterator() = default;
+        virtual ~IIterator(){}
 
     private:
         /*non default copyable*/
@@ -120,7 +120,7 @@ public:
     virtual IIterator* begin(IVector const* const step = 0) = 0;
 
 protected:
-    ICompact() = default;
+    ICompact(){}
 
 private:
     /*non default copyable*/
