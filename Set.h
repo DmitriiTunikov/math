@@ -50,6 +50,7 @@ private:
     IVector* myCreateVector(unsigned int size, double const* vals);
     int copyAndDeleteData(IVector ** dst, IVector ** src, unsigned int size);
     void cleanMemory(IVector ** data, unsigned int size);
+    int createDoubleVec(IVector** vec, size_t idx);
     Set(IVector ** data, unsigned int dim);
     // DATA
     IVector ** m_data;
