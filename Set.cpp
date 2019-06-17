@@ -85,14 +85,7 @@ int Set::put(IVector const * const item){
         return ec;
     }
 
-    const Vector * const tmp = dynamic_cast<const Vector *const >(item);
-    if (tmp == NULL)
-    {
-        cleanMemory(tmpData, m_curIdx);
-        ILog::report("error while making cast from IVector to Vector");
-        return ERR_WRONG_ARG;
-    }
-    m_data[m_curIdx++] = tmp->clone();
+    m_data[m_curIdx++] = item->clone();
 
     return ERR_OK;
 }
@@ -203,7 +196,10 @@ int Set::getByIterator(const IIterator *pIter, IVector *&pItem) const{
 
     const Iterator * it = dynamic_cast<const Iterator *>(pIter);
     if (it == NULL)
+    {
+        ILog::report(" Set::getByIterator - can't cast iter");
         return ERR_WRONG_ARG;
+    }
 
     pItem = m_data[it->m_idx]->clone();
     return ERR_OK;
