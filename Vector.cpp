@@ -22,22 +22,20 @@
 
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 
-#define TO_CONST_VECTOR(name) \
-    const Vector* name##_v = dynamic_cast<const Vector *> (name); \
-    if (name##_v == NULL) \
+#define CHECK_DIM(name) \
+    if ((name) == NULL) \
     {\
-        REPORT("Can't cast argument to vector"); \
+        REPORT("Null argument to vector"); \
         return ERR_WRONG_ARG; \
     } \
-    if (name##_v->m_size != m_size) \
+    if ((name)->getDim() != m_size) \
     { \
         REPORT("Dimension mismatch"); \
         return ERR_DIMENSIONS_MISMATCH; \
     }
 
-#define TO_CONST_VECTOR_ERROR_AS_NULL(name) \
-    const Vector* name##_v = dynamic_cast<const Vector *> (name); \
-    if (name##_v == NULL) \
+#define CHECK_NULL_ERROR_AS_NULL(name) \
+    if ((name) == NULL) \
         return NULL;
 
 Vector::Vector(unsigned int size, double *vals) :
@@ -61,18 +59,26 @@ IVector* Vector::createVector(unsigned int size, double const* vals)
 
 int Vector::add(IVector const* const right)
 {
-    TO_CONST_VECTOR(right)
+    CHECK_DIM(right);
     for (unsigned i = 0; i < m_size; i++)
-        m_vals[i] += right_v->m_vals[i];
+    {
+        double elem;
+        right->getCoord(i, elem);
+        m_vals[i] += elem;
+    }
 
-    return ERR_OK;
+   return ERR_OK;
 }
 
 int Vector::subtract(IVector const* const right)
 {
-   TO_CONST_VECTOR(right)
-   for (unsigned i = 0; i < m_size; i++)
-       m_vals[i] -= right_v->m_vals[i];
+    CHECK_DIM(right);
+    for (unsigned i = 0; i < m_size; i++)
+    {
+        double elem;
+        right->getCoord(i, elem);
+        m_vals[i] -= elem;
+    }
 
    return ERR_OK;
 }
@@ -87,25 +93,29 @@ int Vector::multiplyByScalar(double scalar)
 
 int Vector::dotProduct(IVector const* const right, double& res) const
 {
-    TO_CONST_VECTOR(right)
+    CHECK_DIM(right)
 
     res = 0;
     for (unsigned i = 0; i < m_size; i++)
-        res += m_vals[i] + right_v->m_vals[i];
+    {
+        double elem;
+        right->getCoord(i, elem);
+        res += m_vals[i] + elem;
+    }
 
     return ERR_OK;
 }
 
 IVector* Vector::add(IVector const* const left, IVector const* const right)
 {
-    TO_CONST_VECTOR_ERROR_AS_NULL(left)
-    TO_CONST_VECTOR_ERROR_AS_NULL(right)
+    CHECK_NULL_ERROR_AS_NULL(left)
+    CHECK_NULL_ERROR_AS_NULL(right)
 
-    Vector *res = (Vector *)left_v->clone();
+    IVector *res = left->clone();
     if (res == NULL)
         return NULL;
 
-    if (res->add(right_v) != ERR_OK)
+    if (res->add(right) != ERR_OK)
     {
         delete res;
         return NULL;
@@ -116,14 +126,14 @@ IVector* Vector::add(IVector const* const left, IVector const* const right)
 
 IVector* Vector::subtract(IVector const* const left, IVector const* const right)
 {
-    TO_CONST_VECTOR_ERROR_AS_NULL(left)
-    TO_CONST_VECTOR_ERROR_AS_NULL(right)
+    CHECK_NULL_ERROR_AS_NULL(left)
+    CHECK_NULL_ERROR_AS_NULL(right)
 
-    Vector *res = (Vector *)left_v->clone();
+    IVector *res = left->clone();
     if (res == NULL)
         return NULL;
 
-    if (res->subtract(right_v) != ERR_OK)
+    if (res->subtract(right) != ERR_OK)
     {
         delete res;
         return NULL;
@@ -134,9 +144,9 @@ IVector* Vector::subtract(IVector const* const left, IVector const* const right)
 
 IVector* Vector::multiplyByScalar(IVector const* const left, double scalar)
 {
-    TO_CONST_VECTOR_ERROR_AS_NULL(left)
+    CHECK_NULL_ERROR_AS_NULL(left);
 
-    Vector *res = (Vector *)left_v->clone();
+    IVector *res = left->clone();
     if (res == NULL)
         return NULL;
 
@@ -151,7 +161,8 @@ IVector* Vector::multiplyByScalar(IVector const* const left, double scalar)
 
 int Vector::gt(IVector const* const right, NormType type, bool& result) const
 {
-    TO_CONST_VECTOR(right)
+    CHECK_DIM(right);
+
     double self_norm = 0, right_norm = 0;
     int err_res;
 
@@ -159,7 +170,7 @@ int Vector::gt(IVector const* const right, NormType type, bool& result) const
     if (err_res != ERR_OK)
         return err_res;
 
-    err_res = right_v->norm(type, right_norm);
+    err_res = right->norm(type, right_norm);
     if (err_res != ERR_OK)
         return err_res;
 
@@ -169,7 +180,8 @@ int Vector::gt(IVector const* const right, NormType type, bool& result) const
 
 int Vector::lt(IVector const* const right, NormType type, bool& result) const
 {
-    TO_CONST_VECTOR(right)
+    CHECK_DIM(right);
+
     double self_norm = 0, right_norm = 0;
     int err_res;
 
@@ -177,7 +189,7 @@ int Vector::lt(IVector const* const right, NormType type, bool& result) const
     if (err_res != ERR_OK)
         return err_res;
 
-    err_res = right_v->norm(type, right_norm);
+    err_res = right->norm(type, right_norm);
     if (err_res != ERR_OK)
         return err_res;
 
@@ -187,7 +199,8 @@ int Vector::lt(IVector const* const right, NormType type, bool& result) const
 
 int Vector::eq(IVector const* const right, NormType type, bool& result, double precision) const
 {
-    TO_CONST_VECTOR(right)
+    CHECK_DIM(right);
+
     double self_norm = 0, right_norm = 0;
     int err_res;
 
@@ -195,7 +208,7 @@ int Vector::eq(IVector const* const right, NormType type, bool& result, double p
     if (err_res != ERR_OK)
         return err_res;
 
-    err_res = right_v->norm(type, right_norm);
+    err_res = right->norm(type, right_norm);
     if (err_res != ERR_OK)
         return err_res;
 

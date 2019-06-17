@@ -13,7 +13,7 @@ public:
     }
 
     /*factories*/
-    static Compact* createCompact(IVector const* const begin, IVector const* const end, IVector const* const step = 0);
+    static ICompact* createCompact(IVector const* const begin, IVector const* const end, IVector const* const step = 0);
 
     int deleteIterator(ICompact::IIterator * pIter);
     int getByIterator(ICompact::IIterator const* pIter, IVector*& pItem) const;
@@ -24,7 +24,7 @@ public:
     int isContains(IVector const* const vec, bool& result) const;
     int getNearestNeighbor(IVector const* vec, IVector *& nn) const;
 
-    Compact* clone() const;
+    ICompact* clone() const;
 
     ~Compact();
 

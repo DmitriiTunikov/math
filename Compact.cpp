@@ -5,9 +5,10 @@
 #include <QString>
 #include <string.h>
 
-#include "vector.h"
+#include "Vector.h"
 #include "ILog.h"
 #include "Compact.h"
+#include <iostream>
 
 #define ABS(x) ((x) > 0 ? (x) : -(x))
 
@@ -40,7 +41,7 @@ Compact::Compact(IVector const* const begin, IVector const* const end,
 }
 
 /*factories*/
-Compact* Compact::createCompact(IVector const* const begin, IVector const* const end, IVector const* const step)
+ICompact* Compact::createCompact(IVector const* const begin, IVector const* const end, IVector const* const step)
 {
     if (begin == NULL || end == NULL)
         return NULL;
@@ -68,7 +69,8 @@ Compact* Compact::createCompact(IVector const* const begin, IVector const* const
             return NULL;
         // set as minimum
         for (unsigned i = 0; i < dim; i++)
-            coords[i] = std::numeric_limits<double>::min();
+            //coords[i] = std::numeric_limits<double>::min();
+            coords[i] = 0.001;
         step_copy = Vector::createVector(dim, coords);
         delete [] coords;
     }
@@ -100,8 +102,10 @@ Compact* Compact::createCompact(IVector const* const begin, IVector const* const
                 }
                 else
                 {
-                    step_counts[i] = (unsigned int)(ABS(delta_i)) + !!(ABS(delta_i) - (unsigned int)(ABS(delta_i))); // round
+                    double step_counts_i = delta_i / step_i;
 
+                    step_counts[i] = (unsigned int)(ABS(step_counts_i))
+                            + !!(ABS(step_counts_i) - (unsigned int)(ABS(step_counts_i))); // round
                     step_copy->setCoord(i, delta_i > 0 ? ABS(step_i) : -(ABS(step_i)));
                 }
             }
@@ -140,7 +144,13 @@ int Compact::deleteIterator(ICompact::IIterator * pIter)
 
 int Compact::getByIterator(ICompact::IIterator const* pIter, IVector*& pItem) const
 {
-    Compact::Iterator const * pIter_c = dynamic_cast<Compact::Iterator const *> (pIter);
+    if (pIter == NULL)
+    {
+        REPORT("NULL argument");
+        return ERR_WRONG_ARG;
+    }
+    //Compact::Iterator const * pIter_c = dynamic_cast<Compact::Iterator const *> (pIter);
+    Compact::Iterator const * pIter_c = reinterpret_cast<Compact::Iterator const *> (pIter);
     if (pIter_c == NULL)
     {
         REPORT("Can't convert to iterator");
@@ -273,7 +283,7 @@ int Compact::getNearestNeighbor(IVector const* vec, IVector *& nn) const
     return ERR_OK;
 }
 
-Compact* Compact::clone() const
+ICompact* Compact::clone() const
 {
     return createCompact(m_begin, m_end, m_step);
 }
@@ -303,6 +313,7 @@ int Compact::Iterator::doStep()
             return ERR_OUT_OF_RANGE;
         }
         updateIntegerCoordsFromIndex();
+        updatePosFromIntegerCoords();
     }
     else
     {
@@ -333,7 +344,7 @@ int Compact::Iterator::doStep()
             res = m_compact->m_begin->getCoord(i, begin_i);
             if (res != ERR_OK)
                 return res;
-            res = m_step->getCoord(i, comp_step_i);
+            res = m_compact->m_step->getCoord(i, comp_step_i);
             if (res != ERR_OK)
                 return res;
 
@@ -352,10 +363,12 @@ void Compact::Iterator::updateIntegerCoordsFromIndex()
 {
     // Calculate snake index
     size_t prod = m_compact->m_total_point_count;
-    for (size_t i = 0; i < m_compact->m_dim; i++)
+    size_t tmp_index = m_index;
+    for (size_t i = m_compact->m_dim; i > 0; i--)
     {
-        prod /= m_compact->m_step_counts[i] + 1;
-        m_integerCoords[i] = m_index / prod;
+        prod /= m_compact->m_step_counts[i - 1] + 1;
+        m_integerCoords[i - 1] = tmp_index / prod;
+        tmp_index %= prod;
     }
 
     // Convert to non-snake index
@@ -379,7 +392,7 @@ void Compact::Iterator::updateIndexFromIntegerCoords()
     int sign = 1;
     size_t prod = m_compact->m_total_point_count;
 
-    prod /= m_compact->m_step_counts[m_compact->m_dim - 1];
+    prod /= m_compact->m_step_counts[m_compact->m_dim - 1] + 1;
     m_index += m_integerCoords[m_compact->m_dim - 1] * prod;
     for (size_t i = m_compact->m_dim - 1; i > 0; i--)
     {
