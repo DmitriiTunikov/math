@@ -54,7 +54,7 @@ private:
     Set(IVector ** data, unsigned int dim);
     // DATA
     IVector ** m_data;
-    unsigned int m_curIdx;
+    unsigned int m_curSize;
     unsigned int m_dim;
 };
 

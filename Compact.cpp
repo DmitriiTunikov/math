@@ -402,7 +402,7 @@ void Compact::Iterator::updateIndexFromIntegerCoords()
         if (sign == -1)
             m_integerCoords[i - 1] = m_compact->m_step_counts[i - 1] - m_integerCoords[i - 1];
 
-        prod /= m_compact->m_step_counts[i - 1];
+        prod /= m_compact->m_step_counts[i - 1] + 1;
         m_index += m_integerCoords[i - 1] * prod;
     }
 }

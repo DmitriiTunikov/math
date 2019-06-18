@@ -45,7 +45,7 @@ Vector::Vector(unsigned int size, double *vals) :
 
 IVector* Vector::createVector(unsigned int size, double const* vals)
 {
-    if (size == 0 or vals == NULL)
+    if (size == 0 || vals == NULL)
         return NULL;
     double *vals_copy = new (std::nothrow) double[size];
     if (vals_copy == NULL)
